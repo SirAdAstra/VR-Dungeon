@@ -105,6 +105,11 @@ namespace AnimFollow
                 navMeshAgent.SetDestination(m_PlayerPosition);
                 FaceTarget(m_PlayerPosition);
             }
+
+            if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance && canAttack)
+            {
+                StartCoroutine(Attack());
+            }
     
             if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
             {
@@ -121,14 +126,12 @@ namespace AnimFollow
                 }
                 else
                 {
-                    if (Vector3.Distance(transform.position, GameObject.FindGameObjectWithTag("Player").transform.GetChild(0).position) <= 2f)
+                    if (Vector3.Distance(transform.position, GameObject.FindGameObjectWithTag("Player").transform.GetChild(0).position) >= 2f)
                     {
                         //Debug.Log(Vector3.Distance(transform.position, GameObject.FindGameObjectWithTag("Player").transform.GetChild(0).position));
                         anim.SetTrigger("battle");
                         Stop();
                         m_WaitTime -= Time.deltaTime;
-                        if (canAttack == true && ragdollControl.falling == false && ragdollControl.gettingUp == false)
-                            StartCoroutine(Attack());
                     }
                 }
             }

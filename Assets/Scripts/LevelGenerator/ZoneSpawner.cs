@@ -26,7 +26,7 @@ public class ZoneSpawner : MonoBehaviour
         Transform temp = exitPoint;
         exitPoint.tag = "used";
         exitPoint.gameObject.SetActive(false);
-        Destroy(exitPoint.gameObject);
+        //Destroy(exitPoint.gameObject);
         if (zoneCounter.currentZones >= zoneCounter.maxZones - 1)
         {
             if (zoneCounter.currentFloor < zoneCounter.maxFloors)
@@ -48,12 +48,14 @@ public class ZoneSpawner : MonoBehaviour
         {
             zoneCounter.currentZones++;
             Instantiate(zonePrefabs[Random.Range(0, zonePrefabs.Length)], temp.position, temp.rotation);
+            CloseExits();
         }
         
     }
 
     private void CloseExits()
     {
+        /*
         GameObject[] exits = GameObject.FindGameObjectsWithTag("exitPoint");
         foreach (GameObject point in exits)
         {
@@ -67,6 +69,25 @@ public class ZoneSpawner : MonoBehaviour
                 Instantiate(deadEnd, point.transform.position, point.transform.rotation);
             point.SetActive(false);
             Destroy(point);
+        }
+        */
+
+        for (int i = 0; i < exitPoints.Length; i++)
+        {
+            GameObject point = exitPoints[i].gameObject;
+            if (point.tag != "used")
+            {
+                point.tag = "used";
+                if (Random.Range(0, 100) <= 10 && zoneCounter.currentTreasures < zoneCounter.maxTreasures)
+                {
+                    zoneCounter.currentTreasures++;
+                    Instantiate(treasurePrefab, point.transform.position, point.transform.rotation);
+                }
+                else
+                    Instantiate(deadEnd, point.transform.position, point.transform.rotation);
+                point.SetActive(false);
+                //Destroy(point);
+            }
         }
     }
 }
